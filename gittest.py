@@ -1,1 +1,2 @@
-print "This is a git test"
+if __name__=="__main__":
+	print "this is the second test for git"
