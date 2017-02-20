@@ -3,6 +3,10 @@ import string
 from string import digits 
 from nltk.tokenize import sent_tokenize
 import os
+import timeit 
+
+print "finished importing"
+starttime=timeit.default_timer()
 
 def preprocess(sentence):
 	sentence=sentence.lower()
@@ -11,11 +15,11 @@ def preprocess(sentence):
 	sentence_list=[x for x in sentence_list if x]
 	return sentence_list
 
-location=r'amazonreviews.csv'
-df=pd.read_csv(location,names=['x','y','z','a','text','rating','summary','b','c'])
+location=r'gamereviews.csv'
+df=pd.read_csv(location)
 
-review_count=2000
-unsupervised_review_count=20000
+review_count=5000
+unsupervised_review_count=10000
 
 test1star=review_count
 train1star=review_count
@@ -41,43 +45,47 @@ f9=open('testset/test5star.txt','w')
 f10=open('trainset/train5star.txt','w')
 f11=open('unsupervised.txt','w')
 
+print "started forming files"
+
 for row in df.itertuples(index=True, name='Pandas'):
 				#1star 
-		if int(getattr(row,'rating'))==1 and test1star>0:
-			f1.write(os.linesep.join(x for x in preprocess(str(getattr(row,'text')))))
+		if int(getattr(row,'overall'))==1 and test1star>0:
+			f1.write(os.linesep.join(x for x in preprocess(str(getattr(row,'reviewText')))))
 			test1star-=1
-		elif int(getattr(row,'rating'))==1 and train1star>0:
-			f2.write(os.linesep.join(x for x in preprocess(str(getattr(row,'text')))))
+		elif int(getattr(row,'overall'))==1 and train1star>0:
+			f2.write(os.linesep.join(x for x in preprocess(str(getattr(row,'reviewText')))))
 			train1star-=1
 				#2star
-		elif int(getattr(row,'rating'))==2 and test2star>0:
-			f3.write(os.linesep.join(x for x in preprocess(str(getattr(row,'text')))))
+		elif int(getattr(row,'overall'))==2 and test2star>0:
+			f3.write(os.linesep.join(x for x in preprocess(str(getattr(row,'reviewText')))))
 			test2star-=1
-		elif int(getattr(row,'rating'))==2 and train2star>0:
-			f4.write(os.linesep.join(x for x in preprocess(str(getattr(row,'text')))))
+		elif int(getattr(row,'overall'))==2 and train2star>0:
+			f4.write(os.linesep.join(x for x in preprocess(str(getattr(row,'reviewText')))))
 			train2star-=1
 				#3star
-		elif int(getattr(row,'rating'))==3 and test3star>0:
-			f5.write(os.linesep.join(x for x in preprocess(str(getattr(row,'text')))))
+		elif int(getattr(row,'overall'))==3 and test3star>0:
+			f5.write(os.linesep.join(x for x in preprocess(str(getattr(row,'reviewText')))))
 			test3star-=1
-		elif int(getattr(row,'rating'))==3 and train3star>0:
-			f6.write(os.linesep.join(x for x in preprocess(str(getattr(row,'text')))))
+		elif int(getattr(row,'overall'))==3 and train3star>0:
+			f6.write(os.linesep.join(x for x in preprocess(str(getattr(row,'reviewText')))))
 			train3star-=1
 				#4star
-		elif int(getattr(row,'rating'))==4 and test4star>0:
-			f7.write(os.linesep.join(x for x in preprocess(str(getattr(row,'text')))))
+		elif int(getattr(row,'overall'))==4 and test4star>0:
+			f7.write(os.linesep.join(x for x in preprocess(str(getattr(row,'reviewText')))))
 			test4star-=1
-		elif int(getattr(row,'rating'))==4 and train4star>0:
-			f8.write(os.linesep.join(x for x in preprocess(str(getattr(row,'text')))))
+		elif int(getattr(row,'overall'))==4 and train4star>0:
+			f8.write(os.linesep.join(x for x in preprocess(str(getattr(row,'reviewText')))))
 			train4star-=1
 				#5star
-		elif int(getattr(row,'rating'))==5 and test5star>0:
-			f9.write(os.linesep.join(x for x in preprocess(str(getattr(row,'text')))))
+		elif int(getattr(row,'overall'))==5 and test5star>0:
+			f9.write(os.linesep.join(x for x in preprocess(str(getattr(row,'reviewText')))))
 			test5star-=1
-		elif int(getattr(row,'rating'))==5 and train5star>0:
-			f10.write(os.linesep.join(x for x in preprocess(str(getattr(row,'text')))))
+		elif int(getattr(row,'overall'))==5 and train5star>0:
+			f10.write(os.linesep.join(x for x in preprocess(str(getattr(row,'reviewText')))))
 			train5star-=1
 				#for unsupervised training 
 		else:
-			f11.write(os.linesep.join(x for x in preprocess(str(getattr(row,'text')))))
+			f11.write(os.linesep.join(x for x in preprocess(str(getattr(row,'reviewText')))))
 			unsup-=1
+
+print "finished forming files in %rs " %(timeit.default_timer()-starttime)
